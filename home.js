@@ -86,9 +86,9 @@ document.addEventListener('keydown', (event) => {
 			
 			fadeElement.addEventListener('animationend', function() {
 				if (offset == 0) {
-					window.location.href = 'quiz/index.html';
+					window.location.href = 'quiz/';
 				} else if (offset == 1) {
-					window.location.href = 'flappy/index.html';
+					window.location.href = 'flappy/';
 				}
             }, { once: true });
 			
@@ -125,7 +125,6 @@ document.addEventListener('keydown', (event) => {
 				function enterFullScreen() {
 				  if (document.documentElement.requestFullscreen) {
 					document.documentElement.requestFullscreen().then(() => {
-					  updateCanvas(); // Update canvas when full screen is activated
 					});
 				  }
 				}
@@ -133,10 +132,7 @@ document.addEventListener('keydown', (event) => {
 				// Run when the window has fully loaded
 				window.onload = function() {
 				  enterFullScreen(); // Trigger full screen
-				  updateCanvas();    // Initial canvas sizing
 				};
-				
-				updateCanvas();
 			}
 		}
 		
