@@ -1,0 +1,52 @@
+{
+  "questions": [
+    {
+      "question": "ما هي اللغة الرسمية للبرازيل؟",
+      "image": "images/q1.jpg",
+      "answers": [
+        {
+          "text": "البرتغالية"
+        },
+        {
+          "text": "الإسبانية"
+        },
+        {
+          "text": "الفرنسية"
+        }
+      ],
+      "correctAnswer": "البرتغالية"
+    },
+    {
+      "question": "ما هو أكبر كوكب في النظام الشمسي؟",
+      "image": "images/q2.jpg",
+      "answers": [
+        {
+          "text": "المشتري"
+        },
+        {
+          "text": "الأرض"
+        },
+        {
+          "text": "زحل"
+        }
+      ],
+      "correctAnswer": "المشتري"
+    },
+    {
+      "question": "ما هو أطول نهر في العالم؟",
+      "image": "images/q3.jpg",
+      "answers": [
+        {
+          "text": "نهر الأمازون"
+        },
+        {
+          "text": "نهر النيل"
+        },
+        {
+          "text": "نهر اليانغتسي"
+        }
+      ],
+      "correctAnswer": "نهر الأمازون"
+    }
+  ]
+}
