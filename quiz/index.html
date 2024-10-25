@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Your Website</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+		<style>
+			* {
+				font-family: "Cairo", sans-serif;
+				font-optical-sizing: auto;
+				font-weight: 400;
+				font-style: normal;
+				font-variation-settings:
+				"slnt" 0;
+			}
+		
+			body {
+				margin: 0;
+				height: 100vh;
+				background-image: url('background.jpg');
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				direction: rtl;
+			}
+
+			.container {
+				text-align: center;
+			}
+
+			.banner {
+				width: 100%; /* Make the banner full width */
+				max-height: 200px; /* Set a maximum height for the banner */
+				object-fit: cover; /* Ensure the banner image covers the element */
+				margin-bottom: 15%;
+				animation: scaleUpDown 2s infinite;
+			}
+
+			.buttons {
+				width: 75%;
+				margin: auto;
+				text-align: center; /* Center the buttons */
+				display: flex;
+				flex-direction: column;
+			}
+
+			.sky-button {
+				background-color: #87CEEB; /* Sky color */
+				border: none;
+				color: white;
+				padding: 15px 25px;
+				font-size: 30px;
+				cursor: pointer;
+				border-radius: 5px;
+				margin: 5px; /* Space between buttons */
+				transition: 0.5s;
+			}
+
+			.sky-button:hover {
+				background-color: #00BFFF; /* Darker sky color on hover */
+			}
+
+			@keyframes scaleUpDown {
+				0%, 100% {
+					transform: scale(1);
+				}
+				50% {
+					transform: scale(1.1);
+				}
+			}
+			
+			.question {
+				position: absolute;
+				top: 20px;
+				right: 50px;
+				display: flex;
+				align-items: center;
+			}
+
+			.q-image {
+				width: 120px;
+				height: auto;
+				margin-right: 10px;
+				animation: fadeIn 0.5s ease-in forwards;
+			}
+
+			.q-label {
+				font-size: 60px;
+				font-weight: 700;
+				color: #FFF;
+				line-height: 1.2;
+				margin-right: 20px;
+				animation: slideRight 0.5s ease-in forwards;
+			}
+			
+			.show-image {
+				position: absolute;
+				width: 500px;
+				height: 250px;
+				border: 5px solid #000;
+				border-radius: 20px;
+				right: 100px;
+				top: 175px;
+			}
+			
+			.answer-container {
+				position: absolute;
+				display: flex;
+				flex-direction: column;
+				top: 175px;
+			}
+			.answer-container span {
+				display: flex;
+				align-items: center;
+				margin-bottom: 20px;
+				cursor: pointer;
+			}
+			
+			.answer-container span label {
+				color: #000;
+				background-color: #FFF;
+				padding: 10px;
+				padding-right: 50px;
+				margin-right: -30px;
+				border-radius: 20px 0 0 20px;
+				width: 350px;
+				z-index: -1;
+			}
+			
+			.timer {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				position: absolute;
+				right: 50px;
+				bottom: 20px;
+			}
+
+			.timer-video {
+				width: 150px;
+				height: 150px;
+				border-radius: 50%;
+				object-fit: cover;
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+			}
+			
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+
+			@keyframes slideRight {
+				from {
+					transform: translateX(-20px); /* Start from left */
+				}
+				to {
+					transform: translateX(0); /* End at original position */
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container" style="">
+			<img src="title.png" alt="Banner" class="banner">
+			<div class="buttons">
+				<button class="sky-button" id="start_button">ابدأ المسابقة</button>
+				<button class="sky-button" id="timer_button">الوقت: <span></span></button>
+				<button class="sky-button" id="exit_button">خــروج</button>
+			</div>
+		</div>
+		<div class="game-container" style="display: none;">
+			<div class="question">
+				<img src="q.png" alt="Q Image" class="q-image">
+				<label class="q-label"></label>
+			</div>
+			<div class="answer">
+				<img src="" alt="Show Image" class="show-image">
+				<div class="answer-container">
+					<span>
+						<img src="1.png" style="animation-play-state: paused;" alt="A Image" class="q-image w-image">
+						<label class="q-label w-label" style="transition: 0.5s; opacity: 0; animation-play-state: paused;"></label>
+					</span>
+					<span>
+						<img src="2.png" style="animation-play-state: paused;" alt="A Image" class="q-image w-image">
+						<label class="q-label w-label" style="transition: 0.5s; opacity: 0; animation-play-state: paused;"></label>
+					</span>
+					<span>
+						<img src="3.png" style="animation-play-state: paused;" alt="A Image" class="q-image w-image">
+						<label class="q-label w-label" style="transition: 0.5s; opacity: 0; animation-play-state: paused;"></label>
+					</span>
+				</div>
+			</div>
+			<div class="timer" style="display: none;">
+				<video class="timer-video" autoplay>
+					<source src="timer.mp4" type="video/mp4">
+					Your browser does not support the video tag.
+				</video>
+			</div>
+		</div>
+		<script>
+			var timerMode = false;
+			
+			const whoosh = new Audio('whoosh.mp3');
+			const background = new Audio('background.mp3');
+			const correct = new Audio('correct.mp3');
+			const wrong = new Audio('wrong.mp3');
+			const pop = new Audio('pop.wav');
+			
+			background.play();
+			// Helper function to shuffle array
+			function shuffle(array) {
+			  for (let i = array.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]];
+			  }
+			  return array;
+			}
+
+			// Function to load a new question from the JSON data
+			function loadNewQuestion() {
+				fetch('questions.json') // Replace with the correct path to the JSON file
+					.then(response => response.json())
+					.then(data => {
+						// Select a random question
+						const randomQuestion = data.questions[Math.floor(Math.random() * data.questions.length)];
+
+						// Assign question text
+						document.querySelector('.q-label').textContent = randomQuestion.question;
+
+						// Assign image source
+						document.querySelector('.show-image').src = randomQuestion.image;
+
+						// Shuffle and assign answers
+						const shuffledAnswers = shuffle([...randomQuestion.answers]);
+						const answerLabels = document.querySelectorAll('.w-label');
+						shuffledAnswers.forEach((answer, index) => {
+							answerLabels[index].textContent = answer.text;
+
+							// Add event listener for each answer option
+							answerLabels[index].parentNode.onclick = () => {
+								handleAnswerClick(answerLabels[index].parentNode, answer.text === randomQuestion.correctAnswer);
+							};
+						});
+					})
+					.catch(error => {
+						console.error("Error fetching the JSON file:", error);
+					});
+			}
+			
+			const start_button = document.getElementById('start_button');
+			const timer_button = document.getElementById('timer_button');
+			const exit_button = document.getElementById('exit_button');
+			
+			start_button.addEventListener('click', function() {
+				document.querySelector('.game-container').style.display = 'block';
+				document.querySelector('.container').style.display = 'none';
+			})
+			
+			timer_button.querySelector('span').innerHTML = timerMode ? 'مفعَّل' : 'مغلق';
+			timer_button.addEventListener('click', function() {
+				timerMode = timerMode ? false : true;
+				timer_button.querySelector('span').innerHTML = timerMode ? 'مفعَّل' : 'مغلق';
+			});
+			
+			// Initial call to load the first question
+			loadNewQuestion();
+			  
+			// Function to handle correct and incorrect answers
+			function handleAnswerClick(answerElement, isCorrect) {
+				const labelElement = answerElement.querySelector('label'); // Select the label within the answerElement
+				
+				if (isCorrect) {
+					// Action for correct answer: Set label background to green
+					labelElement.style.backgroundColor = 'green';
+				} else {
+					// Action for incorrect answer: Set label background to red
+					labelElement.style.backgroundColor = 'red';
+				}
+				
+				// Wait a moment to show the color feedback, then load a new question
+				setTimeout(() => {
+					labelElement.style.backgroundColor = 'white'; // Reset the color
+					loadNewQuestion(); // Load a new question
+				}, 1000); // 1-second delay for feedback
+			}
+
+			// Add click events to each answer
+			document.querySelectorAll('.answer-container span').forEach((answerSpan, index) => {
+				const answerText = answerSpan.querySelector('.q-label').textContent;
+
+				// Check if the answer text matches the correct answer from the JSON data
+				answerSpan.addEventListener('click', () => {
+					if (answerText === randomQuestion.correctAnswer) {
+						handleAnswerClick(answerSpan, true); // Correct answer clicked
+					} else {
+						handleAnswerClick(answerSpan, false); // Incorrect answer clicked
+					}
+				});
+			});
+		
+			// Function to trigger animations for the answers sequentially
+			function animateAnswers(index) {
+				const answers = document.querySelectorAll('.answer-container span');
+
+				if (index >= answers.length) return; // Stop if all answers have been animated
+
+				const answer = answers[index];
+				const image = answer.querySelector('.q-image');
+				const label = answer.querySelector('.q-label');
+
+				// Start the fade-in for the image
+				image.style.opacity = '1'; // Make the image visible
+				image.style.animationPlayState = 'running'; // Start the animation
+
+				// Make the label visible and start the slide animation
+				label.style.opacity = '1'; // Make the label visible
+				label.style.animationPlayState = 'running'; // Start the animation
+
+				// Set the delay before starting the next answer animation
+				const delay = 500; // First answer has 1000ms delay, others 500ms
+
+				// Wait for the current animation to complete before starting the next one
+				setTimeout(() => {
+					animateAnswers(index + 1); // Call the next animation
+				
+					if (index == 2 && timerMode) {
+						setTimeout(() => {
+							const timerElement = document.querySelector('.timer');
+							timerElement.style.display = 'block'; // Make the timer visible
+							const video = timerElement.querySelector('.timer-video'); // Get the video element
+							video.play(); // Start playing the video automatically
+						}, 500)
+					}
+				}, delay); // Change this value if you want a delay after each answer animation
+			}
+
+			// Initial animation for the first question
+			const firstQuestion = document.querySelector('.question');
+			const firstImage = firstQuestion.querySelector('.q-image');
+			const firstLabel = firstQuestion.querySelector('.q-label');
+
+			// Start the fade-in for the first image
+			firstImage.style.opacity = '1';
+			firstImage.style.animationPlayState = 'running';
+
+			// Make the first label visible and start the slide animation
+			firstLabel.style.opacity = '1';
+			firstLabel.style.animationPlayState = 'running';
+
+			// Start the answer animations after 1000ms from the first question
+			setTimeout(() => {
+				animateAnswers(0); // Start the animation chain for answers
+			}, 1500); // Start after 1000ms
+		</script>
+	</body>
+</html>
