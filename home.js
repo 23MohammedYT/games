@@ -1,297 +1,218 @@
-const randomQuestion = '';
+var background = new Audio("background.mp3");
+var hover = new Audio("hover.wav");
+var selecting = new Audio("select.mp3");
 
-var keyPressed = false;
-var choosenAnswer = 0;
-var timerMode = false;
-var selectMode = 0;
+document.addEventListener('DOMContentLoaded', function() {
+	background.play();
+})
 
-const selecting = new Audio("../select.mp3");
-const hover = new Audio("../hover.wav");
-const whoosh = new Audio('whoosh.mp3');
-const background = new Audio('background.mp3');
-const correct = new Audio('correct.mp3');
-const wrong = new Audio('wrong.mp3');
-const pop = new Audio('pop.wav');
+const items = document.querySelectorAll('.item');
+let offset = 0; // Track the current offset for the items
+let keyPressed = false;
+let gameView = true;
+const game_name = ['تحدي المعرفة', 'Flappy Bird']; // Add game names here
 
-const overlay = document.querySelector('.overlay');
+const screenSettings = document.querySelectorAll('.screen_settings');
+let settings_offest = 0;
 
-background.play();
-// Select all sky-button elements
-const skyButtons = document.querySelectorAll('.sky-button');
-const answerButtons = document.querySelectorAll('.answer-container span');
+// Function to update the class names based on the offset
+function updateItemClasses() {
+	items.forEach((item, index) => {
+		// Clear previous class names
+		item.classList.remove('left', 'right', 'selected');
 
-// Function to update button background color based on selectMode
-function updateButtonColors() {
-	skyButtons.forEach((button, index) => {
-		button.style.backgroundColor = index === selectMode ? '#00BFFF' : ''; // Apply color if selected
+		// Assign class names based on the offset
+		if (index < offset) {
+			item.classList.add('left');
+		} else if (index > offset) {
+			item.classList.add('right');
+		} else {
+			item.classList.add('selected');
+		}
+
+		// Manage z-index based on offset
+		if (index === (offset + 1)) {
+			item.style.zIndex = '1';
+		} else if (index === offset) {
+			item.style.zIndex = '2';
+		} else {
+			item.style.zIndex = '0';
+		}
 	});
+
+	// Update game title based on the current offset
+	const gameTitle = document.getElementById('game_title');
+	if (game_name[offset]) {
+		gameTitle.textContent = game_name[offset];
+	} else {
+		gameTitle.textContent = '???';
+	}
 	
-	answerButtons.forEach((button, index) => {
-		button.querySelector('label').style.backgroundColor = index === choosenAnswer ? '#FFFF00' : ''; // Apply color if selected
+	screenSettings.forEach(function(button) {
+		if (!gameView && button == screenSettings[settings_offest]) {
+			button.style.color = '#00FF00';
+		} else {
+			button.style.color = '#FFFFFF';
+		}
 	});
 }
-
-// Add hover event listener to each button
-skyButtons.forEach((button, index) => {
-    button.addEventListener('mouseover', () => {
-        selectMode = index; // Update selectMode with the hovered button's index
-		updateButtonColors();
-		hover.play();
-    });
-	
-	button.addEventListener('click', () => {
-		// Array of all sounds for easy control
-		const allSounds = [whoosh, correct, wrong, pop, selecting];
-			allSounds.forEach(sound => {
-			sound.pause();
-			sound.currentTime = 0; // Reset playback position to the start
-		});
-		selecting.play();
-	})
-});
-
-answerButtons.forEach((button, index) => {
-	button.addEventListener('mouseover', () => {
-		choosenAnswer = index; // Update selectMode with the hovered button's index
-		updateButtonColors();
-		hover.play();
-	})
-});
 
 // Event listener for keyboard controls
 document.addEventListener('keydown', (event) => {
-	if (document.querySelector('.container').style.display !== 'none') {
-		if (!keyPressed) {
-			if (event.key === 'ArrowDown' && selectMode < 2) { // Assuming 3 buttons (0, 1, 2)
-				selectMode++;
-				hover.play();
-			} else if (event.key === 'ArrowUp' && selectMode > 0) {
-				selectMode--;
-				hover.play();
-			}
-			updateButtonColors(); // Update button colors after changing selectMode
+	if (event.key === 'ArrowUp') {
+		if (gameView) {
+			gameView = false;
+			screenSettings[0].style.color = '#00FF00';
+			document.querySelector('.selected').style.borderColor = '#FFFF00';
 		}
 		
-		keyPressed = true;
-		if (event.key === 'Enter') {
-			switch (selectMode) {
-				case 0:
-					start_button.click();
-					break;
-				case 1:
-					timer_button.click();
-					break;
-				case 2:
-					exit_button.click();
-					break;
-			}
-			selecting.play();
-		}
-	} else {
-		if (!keyPressed) {
-			if (event.key === 'ArrowDown' && choosenAnswer < 2) { // Assuming 3 buttons (0, 1, 2)
-				choosenAnswer++;
-				hover.play();
-			} else if (event.key === 'ArrowUp' && choosenAnswer > 0) {
-				choosenAnswer--;
-				hover.play();
-			}
-			updateButtonColors(); // Update button colors after changing choosenAnswer
+		hover.play();
+	} else if (event.key === 'ArrowDown') {
+		if (!gameView) {
+			gameView = true;
+			document.querySelector('.selected').style.borderColor = '#00FF00';
+			screenSettings.forEach(function(button) {
+				button.style.color = '#FFFFFF';
+			});
 		}
 		
-		keyPressed = true;
-		if (event.key === 'Enter') {
-			const answerLabel = document.querySelectorAll('.answer-container span .q-label');
-			const answerText = answerLabel[choosenAnswer].textContent;
-			
-			switch (choosenAnswer) {
-				case 0:
-					checkAnswer(answerText, answerLabel);
-					break;
-				case 1:
-					checkAnswer(answerText, answerLabel);
-					break;
-				case 2:
-					checkAnswer(answerText, answerLabel);
-					break;
-			}
-			selecting.play();
-		}
+		hover.play();
 	}
-});
 
-function checkAnswer(answer, answerSpan) {
-	if (answer === randomQuestion.correctAnswer) {
-		handleAnswerClick(answerSpan, true); // Correct answer clicked
-	} else {
-		handleAnswerClick(answerSpan, false); // Incorrect answer clicked
+	if (event.key === 'Enter') {
+		if (gameView) {
+			const fadeElement = document.querySelector('#fadeIn');
+            fadeElement.style.animation = 'fadeColor 1s';
+			
+			fadeElement.addEventListener('animationend', function() {
+				if (offset == 0) {
+					window.location.href = 'quiz/';
+				} else if (offset == 1) {
+					window.location.href = 'flappy/';
+				}
+            }, { once: true });
+			
+			background.pause();
+		} else {
+			if (settings_offest == 0) {
+				if (!document.fullscreenElement && 
+					!document.mozFullScreenElement && 
+					!document.webkitFullscreenElement && 
+					!document.msFullscreenElement) {
+					if (document.documentElement.requestFullscreen) {
+						document.documentElement.requestFullscreen();
+					} else if (document.documentElement.mozRequestFullScreen) { // Firefox
+						document.documentElement.mozRequestFullScreen();
+					} else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+						document.documentElement.webkitRequestFullscreen();
+					} else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+						document.documentElement.msRequestFullscreen();
+					}
+				} else {
+					// Exit full-screen mode if currently in full-screen
+					if (document.exitFullscreen) {
+						document.exitFullscreen();
+					} else if (document.mozCancelFullScreen) { // Firefox
+						document.mozCancelFullScreen();
+					} else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
+						document.webkitExitFullscreen();
+					} else if (document.msExitFullscreen) { // IE/Edge
+						document.msExitFullscreen();
+					}
+				}
+				
+				// Request full-screen and update canvas size when fully loaded
+				function enterFullScreen() {
+				  if (document.documentElement.requestFullscreen) {
+					document.documentElement.requestFullscreen().then(() => {
+					});
+				  }
+				}
+
+				// Run when the window has fully loaded
+				window.onload = function() {
+				  enterFullScreen(); // Trigger full screen
+				};
+			}
+		}
+		
+		selecting.play();
 	}
-}
+
+	if (!keyPressed) {
+		if (event.key === 'ArrowLeft') {
+			if (gameView) {
+				// Move items left
+				if (offset > 0) {
+					offset--;
+				}
+			} else {
+				if (settings_offest != (screenSettings.length - 1)) {settings_offest++};
+			}
+			
+			hover.play();
+		} else if (event.key === 'ArrowRight') {
+			if (gameView) {
+				// Move items right
+				if (offset < (items.length - 1)) {
+					offset++;
+				}
+			} else {
+				if (settings_offest != 0) {settings_offest--};
+			}
+			
+			hover.play();
+		}
+		
+		// Update the class names after changing the offset
+		updateItemClasses();
+	}
+	
+	keyPressed = true;
+});
 
 document.addEventListener('keyup', () => {
 	keyPressed = false; // Reset the flag when the key is released
 });
-// Initial call to set the first button's background color
-updateButtonColors();
 
-// Helper function to shuffle array
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-	const j = Math.floor(Math.random() * (i + 1));
-	[array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
+// Initialize the classes on page load
+updateItemClasses();
 
-// Function to load a new question from the JSON data
-function loadNewQuestion() {
-	overlay.style.pointerEvents = 'auto';
-	fetch('questions.json') // Replace with the correct path to the JSON file
-		.then(response => response.json())
-		.then(data => {
-			// Select a random question
-			data.questions[Math.floor(Math.random() * data.questions.length)];
-
-			// Assign question text
-			document.querySelector('.q-label').textContent = randomQuestion.question;
-
-			// Assign image source
-			document.querySelector('.show-image').src = randomQuestion.image;
-
-			// Shuffle and assign answers
-			const shuffledAnswers = shuffle([...randomQuestion.answers]);
-			const answerLabels = document.querySelectorAll('.w-label');
-			shuffledAnswers.forEach((answer, index) => {
-				answerLabels[index].textContent = answer.text;
-
-				// Add event listener for each answer option
-				answerLabels[index].parentNode.onclick = () => {
-					handleAnswerClick(answerLabels[index].parentNode, answer.text === randomQuestion.correctAnswer);
-				};
-			});
-		})
-		.catch(error => {
-			console.error("Error fetching the JSON file:", error);
-		});
-		
-	// Start the answer animations after 1000ms from the first question
-	setTimeout(() => {
-		animateAnswers(0); // Start the animation chain for answers
-	}, 1500); // Start after 1000ms
-}
-
-const start_button = document.getElementById('start_button');
-const timer_button = document.getElementById('timer_button');
-const exit_button = document.getElementById('exit_button');
-
-start_button.addEventListener('click', function() {
-	document.querySelector('.game-container').style.display = 'block';
-	document.querySelector('.container').style.display = 'none';
+// Function to determine the time of day and change the background accordingly
+function checkTimeOfDay() {
+	const now = new Date();
+	const hours = now.getHours();
+	const body = document.body;
 	
-	// Initial call to load the first question
-	loadNewQuestion();
-})
-
-timer_button.querySelector('span').innerHTML = timerMode ? 'مفعَّل' : 'مغلق';
-timer_button.addEventListener('click', function() {
-	timerMode = timerMode ? false : true;
-	timer_button.querySelector('span').innerHTML = timerMode ? 'مفعَّل' : 'مغلق';
-});
-
-exit_button.addEventListener('click', function() {
-	const fadeElement = document.querySelector('#fadeIn');
-	fadeElement.style.animation = 'fadeColor 1s';
-	fadeElement.addEventListener('animationend', function() {
-		window.location.href = '../';
-	}, { once: true });
-	background.pause();
-})
-  
-// Function to handle correct and incorrect answers
-function handleAnswerClick(answerElement, isCorrect) {
-	const labelElement = answerElement.querySelector('label'); // Select the label within the answerElement
+	// Hide stars by default
+	const stars = document.querySelectorAll('.star');
+	stars.forEach(star => star.style.display = 'none');
 	
-	if (isCorrect) {
-		// Action for correct answer: Set label background to green
-		labelElement.style.backgroundColor = 'green';
-		overlay.style.pointerEvents = 'auto';
-		correct.play();
+	// Hide clouds by default
+	const clouds = document.querySelectorAll('.cloud');
+	clouds.forEach(cloud => cloud.style.display = 'none');
+
+	// Define the time ranges
+	if (hours >= 5 && hours < 12) {
+		console.log("Day");
+		body.style.background = 'linear-gradient(135deg, #87CEEB 0%, #B0E0E6 100%)'; // Bright blue sky
+		clouds.forEach(cloud => cloud.style.display = 'block');
+	} else if (hours >= 12 && hours < 17) {
+		console.log("Afternoon");
+		body.style.background = 'linear-gradient(135deg, #FFA07A 0%, #FF7F50 100%)'; // Sunset-like colors
+	} else if (hours >= 17 && hours < 21) {
+		console.log("Evening");
+		body.style.background = 'linear-gradient(135deg, #FFD700 0%, #FF8C00 100%)'; // Golden dusk
+		clouds.forEach(cloud => cloud.style.display = 'block');
 	} else {
-		// Action for incorrect answer: Set label background to red
-		labelElement.style.backgroundColor = 'red';
-		overlay.style.pointerEvents = 'auto';
-		wrong.play()
+		console.log("Night");
+		body.style.background = 'linear-gradient(135deg, #1c1c3c 0%, #2a2a69 100%)'; // Dark sky
+		stars.forEach(star => star.style.display = 'block'); // Show stars at night
 	}
-	
-	// Wait a moment to show the color feedback, then load a new question
-	setTimeout(() => {
-		labelElement.style.backgroundColor = 'white'; // Reset the color
-		loadNewQuestion(); // Load a new question
-	}, 1000); // 1-second delay for feedback
 }
 
-// Add click events to each answer
-document.querySelectorAll('.answer-container span').forEach((answerSpan, index) => {
-	const answerText = answerSpan.querySelector('.q-label').textContent;
+// Call the function to check the time of day
+checkTimeOfDay();
 
-	// Check if the answer text matches the correct answer from the JSON data
-	answerSpan.addEventListener('click', () => {
-		if (answerText === randomQuestion.correctAnswer) {
-			handleAnswerClick(answerSpan, true); // Correct answer clicked
-		} else {
-			handleAnswerClick(answerSpan, false); // Incorrect answer clicked
-		}
-	});
-});
-
-// Function to trigger animations for the answers sequentially
-function animateAnswers(index) {
-	const answers = document.querySelectorAll('.answer-container span');
-
-	if (index >= answers.length) return; // Stop if all answers have been animated
-
-	const answer = answers[index];
-	const image = answer.querySelector('.q-image');
-	const label = answer.querySelector('.q-label');
-
-	// Start the fade-in for the image
-	image.style.opacity = '1'; // Make the image visible
-	image.style.animationPlayState = 'running'; // Start the animation
-
-	// Make the label visible and start the slide animation
-	label.style.opacity = '1'; // Make the label visible
-	label.style.animationPlayState = 'running'; // Start the animation
-
-	// Set the delay before starting the next answer animation
-	const delay = 500; // First answer has 1000ms delay, others 500ms
-
-	// Wait for the current animation to complete before starting the next one
-	setTimeout(() => {
-		animateAnswers(index + 1); // Call the next animation
-	
-		if (index == 2 && timerMode) {
-			setTimeout(() => {
-				const timerElement = document.querySelector('.timer');
-				timerElement.style.display = 'block'; // Make the timer visible
-				const video = timerElement.querySelector('.timer-video'); // Get the video element
-				video.play(); // Start playing the video automatically
-				overlay.style.pointerEvents = 'none';
-			}, 500)
-		} else {
-			overlay.style.pointerEvents = 'none';
-		}
-	}, delay); // Change this value if you want a delay after each answer animation
-}
-
-// Initial animation for the first question
-const firstQuestion = document.querySelector('.question');
-const firstImage = firstQuestion.querySelector('.q-image');
-const firstLabel = firstQuestion.querySelector('.q-label');
-
-// Start the fade-in for the first image
-firstImage.style.opacity = '1';
-firstImage.style.animationPlayState = 'running';
-
-// Make the first label visible and start the slide animation
-firstLabel.style.opacity = '1';
-firstLabel.style.animationPlayState = 'running';
+// Optionally, check the time of day periodically, every 1 minute
+setInterval(checkTimeOfDay, 60000); // Update every 60 seconds
