@@ -15,6 +15,11 @@ const pop = new Audio('pop.wav');
 const overlay = document.querySelector('.overlay');
 
 background.play();
+background.addEventListener('ended', () => {
+	background.currentTime = 0; // Reset playback position
+	background.play(); // Replay the sound
+})
+	
 // Select all sky-button elements
 const skyButtons = document.querySelectorAll('.sky-button');
 const answerButtons = document.querySelectorAll('.answer-container span');
@@ -257,6 +262,9 @@ function animateAnswers(index) {
 	const answer = answers[index];
 	const image = answer.querySelector('.q-image');
 	const label = answer.querySelector('.q-label');
+
+	image.style.animationPlayState = 'paused';
+	label.style.animationPlayState = 'paused';
 
 	// Start the fade-in for the image
 	image.style.opacity = '1'; // Make the image visible
