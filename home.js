@@ -187,6 +187,9 @@ const exit_button = document.getElementById('exit_button');
 start_button.addEventListener('click', function() {
 	document.querySelector('.game-container').style.display = 'block';
 	document.querySelector('.container').style.display = 'none';
+	
+	// Initial call to load the first question
+	loadNewQuestion();
 })
 
 timer_button.querySelector('span').innerHTML = timerMode ? 'مفعَّل' : 'مغلق';
@@ -203,9 +206,6 @@ exit_button.addEventListener('click', function() {
 	}, { once: true });
 	background.pause();
 })
-
-// Initial call to load the first question
-loadNewQuestion();
   
 // Function to handle correct and incorrect answers
 function handleAnswerClick(answerElement, isCorrect) {
