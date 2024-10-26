@@ -87,35 +87,36 @@ document.addEventListener('keydown', (event) => {
 			selecting.play();
 		}
 	} else {
-		if (overlay.style.pointerEvents === 'none' && !keyPressed) {
-			if (event.key === 'ArrowDown' && choosenAnswer < 2) { // Assuming 3 buttons (0, 1, 2)
-				choosenAnswer++;
-				hover.play();
-			} else if (event.key === 'ArrowUp' && choosenAnswer > 0) {
-				choosenAnswer--;
-				hover.play();
+		if (overlay.style.pointerEvents === 'none') {
+			if (!keyPressed) {
+				if (event.key === 'ArrowDown' && choosenAnswer < 2) { // Assuming 3 buttons (0, 1, 2)
+					choosenAnswer++;
+					hover.play();
+				} else if (event.key === 'ArrowUp' && choosenAnswer > 0) {
+					choosenAnswer--;
+					hover.play();
+				}
+				updateButtonColors(); // Update button colors after changing choosenAnswer
 			}
-			updateButtonColors(); // Update button colors after changing choosenAnswer
-		}
 		
-		keyPressed = true;
-		if (event.key === 'Enter') {
-			const answerSpan = document.querySelectorAll('.answer-container span')[choosenAnswer];
-			const answerText = answerSpan.querySelector('.q-label').textContent;
-			
-			
-			switch (choosenAnswer) {
-				case 0:
-					checkAnswer(answerText, answerSpan);
-					break;
-				case 1:
-					checkAnswer(answerText, answerSpan);
-					break;
-				case 2:
-					checkAnswer(answerText, answerSpan);
-					break;
+			keyPressed = true;
+			if (event.key === 'Enter') {
+				const answerSpan = document.querySelectorAll('.answer-container span')[choosenAnswer];
+				const answerText = answerSpan.querySelector('.q-label').textContent;
+				
+				
+				switch (choosenAnswer) {
+					case 0:
+						checkAnswer(answerText, answerSpan);
+						break;
+					case 1:
+						checkAnswer(answerText, answerSpan);
+						break;
+					case 2:
+						checkAnswer(answerText, answerSpan);
+						break;
+				}
 			}
-			selecting.play();
 		}
 	}
 });
@@ -146,6 +147,9 @@ function shuffle(array) {
 // Function to load a new question from the JSON data
 function loadNewQuestion() {
 	overlay.style.pointerEvents = 'auto';
+	choosenAnswer = 0;
+	updateButtonColors();
+	
 	fetch('questions.json') // Replace with the correct path to the JSON file
 		.then(response => response.json())
 		.then(data => {
