@@ -1,3 +1,5 @@
+const randomQuestion = '';
+
 var keyPressed = false;
 var choosenAnswer = 0;
 var timerMode = false;
@@ -39,7 +41,7 @@ skyButtons.forEach((button, index) => {
 	
 	button.addEventListener('click', () => {
 		// Array of all sounds for easy control
-		const allSounds = [whoosh, background, correct, wrong, pop, selecting];
+		const allSounds = [whoosh, correct, wrong, pop, selecting];
 			allSounds.forEach(sound => {
 			sound.pause();
 			sound.currentTime = 0; // Reset playback position to the start
@@ -53,16 +55,6 @@ answerButtons.forEach((button, index) => {
 		choosenAnswer = index; // Update selectMode with the hovered button's index
 		updateButtonColors();
 		hover.play();
-	})
-	
-	button.addEventListener('click', () => {
-		// Array of all sounds for easy control
-		const allSounds = [whoosh, background, correct, wrong, pop, selecting];
-			allSounds.forEach(sound => {
-			sound.pause();
-			sound.currentTime = 0; // Reset playback position to the start
-		});
-		selecting.play();
 	})
 });
 
@@ -96,7 +88,7 @@ document.addEventListener('keydown', (event) => {
 			selecting.play();
 		}
 	} else {
-		if (!keyPressed) {
+		if (overlay.style.pointerEvents === 'none' && !keyPressed) {
 			if (event.key === 'ArrowDown' && choosenAnswer < 2) { // Assuming 3 buttons (0, 1, 2)
 				choosenAnswer++;
 				hover.play();
@@ -158,7 +150,7 @@ function loadNewQuestion() {
 		.then(response => response.json())
 		.then(data => {
 			// Select a random question
-			const randomQuestion = data.questions[Math.floor(Math.random() * data.questions.length)];
+			data.questions[Math.floor(Math.random() * data.questions.length)];
 
 			// Assign question text
 			document.querySelector('.q-label').textContent = randomQuestion.question;
@@ -181,6 +173,11 @@ function loadNewQuestion() {
 		.catch(error => {
 			console.error("Error fetching the JSON file:", error);
 		});
+		
+	// Start the answer animations after 1000ms from the first question
+	setTimeout(() => {
+		animateAnswers(0); // Start the animation chain for answers
+	}, 1500); // Start after 1000ms
 }
 
 const start_button = document.getElementById('start_button');
@@ -190,6 +187,9 @@ const exit_button = document.getElementById('exit_button');
 start_button.addEventListener('click', function() {
 	document.querySelector('.game-container').style.display = 'block';
 	document.querySelector('.container').style.display = 'none';
+	
+	// Initial call to load the first question
+	loadNewQuestion();
 })
 
 timer_button.querySelector('span').innerHTML = timerMode ? 'مفعَّل' : 'مغلق';
@@ -206,9 +206,6 @@ exit_button.addEventListener('click', function() {
 	}, { once: true });
 	background.pause();
 })
-
-// Initial call to load the first question
-loadNewQuestion();
   
 // Function to handle correct and incorrect answers
 function handleAnswerClick(answerElement, isCorrect) {
@@ -298,8 +295,3 @@ firstImage.style.animationPlayState = 'running';
 // Make the first label visible and start the slide animation
 firstLabel.style.opacity = '1';
 firstLabel.style.animationPlayState = 'running';
-
-// Start the answer animations after 1000ms from the first question
-setTimeout(() => {
-	animateAnswers(0); // Start the animation chain for answers
-}, 1500); // Start after 1000ms
