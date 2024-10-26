@@ -124,6 +124,11 @@ document.addEventListener('keydown', (event) => {
 				}
 			}
 		}
+		
+		if (event.key === 'Escape') {
+			document.querySelector('.game-container').style.display = 'none';
+			document.querySelector('.container').style.display = 'block';
+		}
 	}
 });
 
