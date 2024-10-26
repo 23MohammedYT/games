@@ -149,7 +149,7 @@ function loadNewQuestion() {
 		.then(response => response.json())
 		.then(data => {
 			// Select a random question
-			data.questions[Math.floor(Math.random() * data.questions.length)];
+			randomQuestion = data.questions[Math.floor(Math.random() * data.questions.length)];
 
 			// Assign question text
 			document.querySelector('.q-label').textContent = randomQuestion.question;
