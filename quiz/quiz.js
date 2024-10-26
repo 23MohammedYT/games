@@ -100,18 +100,19 @@ document.addEventListener('keydown', (event) => {
 		
 		keyPressed = true;
 		if (event.key === 'Enter') {
-			const answerLabel = document.querySelectorAll('.answer-container span .q-label');
-			const answerText = answerLabel[choosenAnswer].textContent;
+			const answerSpan = document.querySelectorAll('.answer-container span')[choosenAnswer];
+			const answerText = answerSpan.querySelector('.q-label').textContent;
+			
 			
 			switch (choosenAnswer) {
 				case 0:
-					checkAnswer(answerText, answerLabel);
+					checkAnswer(answerText, answerSpan);
 					break;
 				case 1:
-					checkAnswer(answerText, answerLabel);
+					checkAnswer(answerText, answerSpan);
 					break;
 				case 2:
-					checkAnswer(answerText, answerLabel);
+					checkAnswer(answerText, answerSpan);
 					break;
 			}
 			selecting.play();
