@@ -1,5 +1,4 @@
-const randomQuestion = '';
-
+var randomQuestion;
 var keyPressed = false;
 var choosenAnswer = 0;
 var timerMode = false;
