@@ -3,6 +3,7 @@ var keyPressed = false;
 var choosenAnswer = 0;
 var timerMode = false;
 var selectMode = 0;
+var animationDone = false;
 
 const selecting = new Audio("../select.mp3");
 const hover = new Audio("../hover.wav");
@@ -151,7 +152,7 @@ function shuffle(array) {
 
 // Function to load a new question from the JSON data
 function loadNewQuestion() {
-	overlay.style.pointerEvents = 'auto';
+	animationDone == false ? overlay.style.pointerEvents = 'auto' : overlay.style.pointerEvents = 'none';
 	choosenAnswer = 0;
 	updateButtonColors();
 	
@@ -290,7 +291,10 @@ function animateAnswers(index) {
 				overlay.style.pointerEvents = 'none';
 			}, 500)
 		} else {
-			overlay.style.pointerEvents = 'none';
+			if (index == 2) {
+				overlay.style.pointerEvents = 'none';
+				animationDone = true;
+			}
 		}
 	}, delay); // Change this value if you want a delay after each answer animation
 }
